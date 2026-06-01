@@ -2,7 +2,7 @@
 ## A Comprehensive Engineering Design Walkthrough
 
 **Teserac AI — Design Challenge Response**
-Prepared for: Alan Kuo, Principal Engineer, Teserac AI
+Prepared for: Alan Kuo, Deepak Panchapakesan, Teserac AI
 Date: May 29, 2026
 
 ---
