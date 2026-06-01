@@ -2,7 +2,7 @@
 ## Presenter's Copy — Interview Guide
 
 **Teserac AI — Design Challenge Response**
-Prepared for: Alan Kuo, Principal Engineer, Teserac AI
+Prepared for: Alan Kuo, Deepak Panchapakesan, Teserac AI
 
 > **How to use this document:**
 > Each section has a `[~N min]` pacing estimate. Italicized lines are your spoken transition sentences.
