@@ -131,26 +131,25 @@ The plugin expects row filters as a list of `{"expression": ...}` objects, each 
 
 ```mermaid
 sequenceDiagram
-    actor Dr as Dr. Smith (physician)
-    participant App as Agentic App / AI Agent
-    participant T as Trino (OPA plugin)
-    participant O as OPA
-    participant L as OTel -> SIEM
-    Dr->>App: OIDC login, then asks "List my diabetic patients' recent visits"
-    App->>App: Validate user JWT, OBO exchange (act: svc-agentic-app)
-    App->>T: SELECT ... (service-account JWT, X-Trino-User = dr.smith@org)
-    T->>O: ImpersonateUser? svc-agentic-app -> dr.smith@org
-    O-->>T: true
-    T->>T: Session user = dr.smith@org, groups = [physician] via group provider
-    T->>O: allow? (SelectFromColumns on patients, encounters)
-    O-->>T: true
-    T->>O: rowFilters / batchColumnMasks
-    O-->>T: facility_id = 'FAC_SJ'; CASE-WHEN masks
-    T->>T: Rewrite plan, execute on Iceberg
-    T-->>App: Filtered + masked result set
-    App-->>Dr: Grounded answer (PHI only for own patients)
-    O--)L: Decision logs
-    T--)L: Query-completed event
+    participant User as Dr Smith
+    participant App as Agentic App
+    participant Trino as Trino OPA plugin
+    participant OPA as OPA
+    participant SIEM as OTel and SIEM
+    User->>App: Login via OIDC and ask a question
+    App->>App: Validate JWT and do OBO exchange
+    App->>Trino: SQL with service account and X-Trino-User
+    Trino->>OPA: ImpersonateUser check
+    OPA-->>Trino: allow
+    Trino->>OPA: Table and column access check
+    OPA-->>Trino: allow
+    Trino->>OPA: Row filters and column masks
+    OPA-->>Trino: Facility filter and CASE WHEN masks
+    Trino->>Trino: Rewrite plan and run on Iceberg
+    Trino-->>App: Filtered and masked results
+    App-->>User: Answer with PHI only for own patients
+    OPA-->>SIEM: Decision logs
+    Trino-->>SIEM: Query events
 ```
 
 1. **Login.** The user signs in to the agentic app through the IdP. The app receives a short-lived JWT with `sub` and `groups`.
